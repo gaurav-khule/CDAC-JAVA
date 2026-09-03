@@ -1,0 +1,616 @@
+Gaurav Khule
+Roll no: 20
+
+1.
+
+public interface Vehicle {
+	
+	
+	void fuelEfficiency();
+	void maxSpeed();
+}
+
+public class Car implements Vehicle {
+
+	@Override
+	public void fuelEfficiency() {
+		System.out.println("Car fuel efficiency: 20 km/l");
+
+	}
+
+	@Override
+	public void maxSpeed() {
+		System.out.println("Car maximan speed: 180 km/h");
+
+	}
+
+}
+
+public class Bike implements Vehicle {
+
+	@Override
+	public void fuelEfficiency() {
+		System.out.println("Bike fuel Efficiency: 45 km/l");
+
+	}
+
+	@Override
+	public void maxSpeed() {
+		System.out.println("Bike max speed: 120 km/h");
+
+	}
+
+}
+
+public class Truck implements Vehicle {
+
+	@Override
+	public void fuelEfficiency() {
+		System.out.println("Truck fuel efficiency: 8 km/l");
+	}
+	
+	@Override
+	public void maxSpeed() {
+		System.out.println("Truck max speed: 100 km/h");
+	}
+	
+}
+
+public class VehicleMain {
+
+	public static void main(String[] args) {
+		
+		Car c = new Car();
+		c.fuelEfficiency();
+		c.maxSpeed();
+		System.out.println("--------------------");
+		Bike b = new Bike();
+		b.fuelEfficiency();
+		b.maxSpeed();
+		System.out.println("--------------------");
+		Truck t = new Truck();
+		t.fuelEfficiency();
+		t.maxSpeed();
+
+	}
+}
+
+--------------------------------------------------------------------------------------
+
+2.
+
+public interface ElectronicDevice {
+	
+	void powerConsumption();
+	void deviceType();
+}
+
+public class Smartphone implements ElectronicDevice {
+
+	@Override
+	public void powerConsumption() {
+		System.out.println("Smartphone power consumption: 15 watt");
+
+	}
+
+	@Override
+	public void deviceType() {
+		System.out.println("Device Type: Samrtphone");
+
+	}
+
+}
+
+public class Laptop implements ElectronicDevice {
+
+	@Override
+	public void powerConsumption() {
+		System.out.println("Laptop power consumption: 65 watts");
+
+	}
+
+	@Override
+	public void deviceType() {
+		System.out.println("Device Type: Laptop");
+
+	}
+
+}
+
+public class Television implements ElectronicDevice {
+
+	@Override
+	public void powerConsumption() {
+		System.out.println("Television power consumption: 120 watts");
+
+	}
+
+	@Override
+	public void deviceType() {
+		System.out.println("Device Type: Television");
+
+	}
+
+}
+
+public class ElectronicDeviceMain {
+
+	public static void main(String[] args) {
+		
+		Smartphone ss = new Smartphone();
+		ss.powerConsumption();
+		ss.deviceType();
+		System.out.println("-----------------------------------------");
+		Laptop l = new Laptop();
+		l.powerConsumption();
+		l.deviceType();
+		System.out.println("-----------------------------------------");
+		Television t = new Television();
+		t.powerConsumption();
+		t.deviceType();
+
+	}
+
+}
+
+-----------------------------------------------------------------------------------
+
+3.
+
+public abstract class BankAccount {
+	
+	int accountNumber;
+	String accountHolderName;
+	double balance;
+	
+	//No-Arg Constructor
+	public BankAccount() {
+		
+	}
+
+	public BankAccount(int accountNumber, String accountHolderName, double balance) {
+		super();
+		this.accountNumber = accountNumber;
+		this.accountHolderName = accountHolderName;
+		this.balance = balance;
+	}
+	
+	
+	abstract void calculateInterest();
+	
+	void displayDetails() {
+		System.out.println("Account number: " + accountNumber);
+		System.out.println("Account Holder Name: " + accountHolderName);
+		System.out.println("Balance: " + balance);
+	}
+}
+
+public class SavingAccount extends BankAccount {
+		
+	public SavingAccount(int accountNumber, String accountHolderName, double balance) {
+		super(accountNumber, accountHolderName, balance);
+	}
+
+	@Override
+	void calculateInterest() {
+		double interest = balance * 4/100;
+		System.out.println("Interest: " + interest +" rate.");
+	}
+	
+	void deposite(double amount) {
+		balance = balance + amount;
+		System.out.println("Deposited: " + amount);
+		System.out.println("Update balance: " + balance);
+	}
+	
+	void withdraw(double amount) {
+		if(amount <= balance) {
+			balance = balance - amount;
+			System.out.println("Withdraw: " + amount);
+			System.out.println("Update after withdraw: " + balance);
+		}else {
+			System.out.println("Insufficient balance..");
+		}
+	}
+}
+
+public class FixedDepositeAccount extends BankAccount {
+	
+	
+	public FixedDepositeAccount(int accountNumber, String accountHolderName, double balance) {
+		super(accountNumber, accountHolderName, balance);
+	}
+
+	@Override
+	void calculateInterest() {
+		double interest = balance * 6 / 100;
+		System.out.println("Interest: " + interest+" rate.");
+	}
+	
+	void deposite(double amount) {
+		balance = balance + amount;
+		System.out.println("Deposited: " + amount);
+	}
+	
+	void withdraw(double amount) {
+		if(amount <= balance) {
+			balance = balance - amount;
+			System.out.println("Withdraw: " + amount);
+		}else {
+			System.out.println("Insufficient balance..");
+		}
+	}
+}
+
+public class BankAccountMain {
+
+	public static void main(String[] args) {
+		SavingAccount savAcc = new SavingAccount(44554455, "Alex", 5000);
+		
+		System.out.println("----Saving Account---");
+		savAcc.displayDetails();
+		savAcc.calculateInterest();
+		savAcc.deposite(2000);
+		savAcc.withdraw(3000);
+		System.out.println("=======================");
+		savAcc.displayDetails();
+		
+		FixedDepositeAccount fd = new FixedDepositeAccount(99663399, "Harry", 9000);
+		
+		System.out.println("\n----Fixed Deposite Account---");
+		fd.displayDetails();
+		fd.calculateInterest();
+		fd.deposite(1000);
+		fd.withdraw(5000);
+		System.out.println("=======================");
+		fd.displayDetails();
+
+	}
+}
+
+-----------------------------------------------------------------------------------------------------
+
+4.
+
+public interface LibraryItem {
+
+	double calculateFine(int daysOverdue);
+	void displayItems();
+}
+
+public class Book implements LibraryItem {
+	String title;
+	String author;
+	
+	public Book(String title, String author) {
+		super();
+		this.title = title;
+		this.author = author;
+	}
+
+	@Override
+	public double calculateFine(int daysOverdue) {
+		return daysOverdue * 2;
+	}
+
+	@Override
+	public void displayItems() {
+		System.out.println("Item type: Book");
+		System.out.println("Title: " + title);
+		System.out.println("Author: "+ author);
+	}
+	
+	void readSample() {
+		System.out.println("Reading book sample...");
+	}
+}
+
+public class DVD implements LibraryItem {
+	String title;
+	int durationMinutes;
+	
+	
+	public DVD(String title, int durationMinutes) {
+		super();
+		this.title = title;
+		this.durationMinutes = durationMinutes;
+	}
+
+	@Override
+	public double calculateFine(int daysOverdue) {
+		return daysOverdue * 5;
+	}
+
+	@Override
+	public void displayItems() {
+		System.out.println("Item type: DVD");
+		System.out.println("Title: " + title);
+		System.out.println("Duration: " + durationMinutes + " minutes");
+	}
+	
+	void playTrailer() {
+		System.out.println("Playing DVD Trailer......");
+	}
+}
+
+public class LibraryItemMain {
+
+	public static void main(String[] args) {
+		Book b = new Book("Start with Why", "Simon Sinek");
+		
+		System.out.println("-------BOOK----------");
+		b.displayItems();
+		System.out.println("Fine: Rs." + b.calculateFine(5));
+		b.readSample();
+		
+		System.out.println("------==-------=---------------------");
+		
+		DVD d = new DVD("Avenger", 180);
+		d.displayItems();
+		System.out.println("Fine: Rs." + d.calculateFine(5));
+		d.playTrailer();
+		
+	}
+
+}
+
+-----------------------------------------------------------------------------------------
+
+5.
+
+package Assignment5;
+
+public interface Payment {
+	void processPayment(double amount);
+	
+	void generateReceipt();
+}
+
+interface Refundable{
+	void processRefund(double amount);
+}
+
+interface Rewardable{
+	void addRewardPoints(int points);
+}
+
+package Assignment5;
+
+public class CreditCardPayment implements Payment, Refundable, Rewardable {
+
+	@Override
+	public void addRewardPoints(int points) {
+		System.out.println("Reward Points: " + points); 
+	}
+
+	@Override
+	public void processPayment(double amount) {
+		System.out.println("Credit Card Payment: Rs." + amount);
+	}
+	
+	@Override
+	public void processRefund(double amount) {
+		double fee = amount * 2 / 100; double refund = amount - fee; 
+		System.out.println("Processing Fee: Rs." + fee); 
+		System.out.println("Refund Amount: Rs." + refund);
+	}
+
+	@Override
+	public void generateReceipt() {
+		System.out.println("Credit Card Receipt Generated");
+
+		}
+	}
+
+package Assignment5;
+
+public class UPIPayment implements Payment, Refundable {
+
+	@Override
+	public void processPayment(double amount) {
+		System.out.println("UPI Payment: Rs." + amount);
+	}
+	
+	@Override
+	public void generateReceipt() {
+		System.out.println("UPI Receipt Generated");
+	}
+	
+	@Override
+	public void processRefund(double amount) {
+		double fee = amount * 2 / 100; 
+		double refund = amount - fee;
+		
+		System.out.println("Processing Fee: Rs." + fee); 
+		System.out.println("Refund Amount: Rs." + refund);
+	}
+}
+
+package Assignment5;
+
+public class CashPayment implements Payment {
+
+	@Override
+	public void processPayment(double amount) {
+		System.out.println("Cash Payment: Rs." + amount);
+	}
+
+	@Override
+	public void generateReceipt() {
+		System.out.println("Cash Receipt Generated");
+	}
+}
+
+package Assignment5;
+
+import java.util.*;
+
+public class PaymentMain {
+	
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in); 
+		Payment p; 
+		System.out.println("----- Payment Menu -----"); 
+		System.out.println("1. Credit Card"); 
+		System.out.println("2. UPI"); 
+		System.out.println("3. Cash"); 
+		System.out.print("Enter choice: "); 
+		
+		int choice = sc.nextInt(); 
+		System.out.print("Enter amount: "); 
+		double amount = sc.nextDouble(); 
+		
+		switch (choice){ 
+		case 1: 
+			p = new CreditCardPayment(); 
+			p.processPayment(amount); 
+			p.generateReceipt();
+			
+			Rewardable r = (Rewardable) p;
+			
+			int points = (int) amount / 100; 
+			r.addRewardPoints(points);
+			
+			Refundable ref = (Refundable) p; ref.processRefund(amount); 
+			break;
+			
+		case 2:
+			p = new UPIPayment(); 
+			p.processPayment(amount); 
+			p.generateReceipt();
+			
+			Refundable ref2 = (Refundable) p; 
+			ref2.processRefund(amount); 
+			break;
+			
+		case 3:
+			p = new CashPayment(); 
+			p.processPayment(amount); 
+			p.generateReceipt(); break;
+			
+		default:
+			System.out.println("Invalid Choice!!");
+			break;
+		}	
+	}	
+}
+	
+-----------------------------------------------------------------------------------------------------------
+6.
+
+package Assign5;
+
+public abstract class Vehical {
+	String vehicleName;
+	int param;
+	
+	public Vehical(String vehicleName, int param) {
+		this.vehicleName = vehicleName;
+		this.param = param;
+	}
+	
+	abstract double calculateToll(int param);
+	
+	void displayDetails() {
+		System.out.println("Vehical Name: " + vehicleName);
+		System.out.println("Parameter: " + param);
+		System.out.println("Toll: Rs." + calculateToll(param));
+	}
+	
+	
+}
+
+package Assign5;
+
+public class Car extends Vehical {
+
+	public Car(String vehicleName, int seats) {
+		super(vehicleName, seats);
+	}
+
+	@Override
+	double calculateToll(int param) {
+		return param * 20;
+	}
+
+}
+
+package Assign5;
+
+public class Truck extends Vehical {
+
+	
+	public Truck(String vehicleName, int load) {
+		super(vehicleName, load);
+	}
+
+	@Override
+	double calculateToll(int param) {
+		return param * 10;
+	}
+
+}
+package Assign5;
+
+public class Bus extends Vehical {
+
+	
+	public Bus(String vehicleName, int capacity) {
+		super(vehicleName, capacity);
+	}
+
+	@Override
+	double calculateToll(int param) {
+		return param * 15;
+	}
+
+}
+
+package Assign5;
+
+import java.util.*;
+
+public class VehicalMain1 {
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		int choice; 
+		do { 
+			System.out.println("\n----- Toll Management System -----"); 
+			System.out.println("1. Car"); 
+			System.out.println("2. Truck"); 
+			System.out.println("3. Bus"); 
+			System.out.println("4. Exit"); 
+			System.out.print("Enter your choice: "); 
+			
+			choice = sc.nextInt(); 
+			if (choice >= 1 && choice <= 3) { 
+				sc.nextLine(); 
+				System.out.print("Enter Vehicle Name: "); 
+				String name = sc.nextLine(); 
+				System.out.print("Enter Parameter: "); 
+				int param = sc.nextInt(); 
+				Vehical v;
+				
+			switch (choice) 
+			{ 
+			case 1: 
+				v = new Car(name, param); 
+				break; 
+			case 2: 
+				v = new Truck(name, param); 
+				break; 
+			default: v = new Bus(name, param); 
+			} 
+			v.displayDetails(); 
+			} 
+			else if 
+			(choice == 4) { 
+				System.out.println("Program terminated."); 
+				} 
+			else { System.out.println("Invalid choice."); 
+				} 
+			} while (choice != 4);
+	}
+}
+
