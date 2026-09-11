@@ -1,0 +1,226 @@
+package flightbookingsystem;
+
+public class BuissnessFlight extends Flight {
+	
+	boolean bagAccess;
+	
+	public BuissnessFlight(String flightNo, String source, String destination) {
+		super(flightNo, source, destination);
+		bagAccess = true;
+		
+		
+	}
+}
+----------------------------------------------------------------------
+package flightbookingsystem;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
+
+public class Flight {
+	String flightNo;
+	String source;
+	String destination;
+	ArrayList<Passenger> passengers;
+	
+	public Flight(String flightNo, String source, String destination) {
+		this.flightNo = flightNo;
+		this.source = source;
+		this.destination = destination;
+		this.passengers = new ArrayList<Passenger>();
+	}
+	
+	public void addPassengers(Passenger p) {
+		
+		for(Passenger p1 : passengers) {
+			if(p1.getSeatNo() == p.getSeatNo()) {
+				System.out.println("Seat is already booked");
+				return;
+			}
+		}
+		passengers.add(p);
+		System.out.println("Passenger added successfully");
+	}
+	
+	public void removePassengers(int id) throws PassengerNotFoundException {
+		ListIterator<Passenger> itr = passengers.listIterator();
+		while(itr.hasNext()){
+			Passenger p = itr.next();
+			if(p.getId() == id) {
+				passengers.remove(p);
+				System.out.println("Passenger remove successfully");
+				return;
+			}
+		}
+		throw new PassengerNotFoundException("Passenger with given id is not found");
+	}
+	
+	public void searchPassengerBySeatNo(int seatNo) {
+		Iterator<Passenger> itr = passengers.iterator();
+		while(itr.hasNext()) {
+			Passenger p = itr.next();
+			if(p.getSeatNo()==seatNo) {
+				System.out.println("Passenger Details");
+				System.out.println(p);
+				return;
+			}
+		}
+		System.out.println("Passenger with given id not found");
+	}
+	
+	public void changeSeatNo(int id, int seatNo) {
+		for(Passenger p : passengers) {
+			if(p.getSeatNo() == seatNo) {
+				System.out.println("Seat is already booked");
+				return;
+			}
+		}
+		for(Passenger p1 : passengers) {
+			if(p1.getId() == id) {
+				p1.setSeatNo(seatNo);
+				System.out.println("Seat change successfully");
+			}
+		}
+	}
+	
+	public void displayAll() {
+		for(Passenger p : passengers) {
+			System.out.println(p);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Flight [flightNo=" + flightNo + ", source=" + source + ", destination=" + destination + ", passengers="
+				+ passengers + "]";
+	}
+}
+---------------------------------------------------------------------------------------
+package flightbookingsystem;
+
+public class Passenger {
+	static int idGenerator=1;
+	int id;
+	String name;
+	int seatNo;
+	
+	public Passenger(String name, int seatNo) {
+		this.name = name;
+		this.seatNo = seatNo;
+		this.id = idGenerator++;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getSeatNo() {
+		return seatNo;
+	}
+
+	public void setSeatNo(int seatNo) {
+		this.seatNo = seatNo;
+	}
+
+	@Override
+	public String toString() {
+		return "Passenger [id=" + id + ", name=" + name + ", seatNo=" + seatNo + "]";
+	}
+}
+------------------------------------------------------------------------------------
+package flightbookingsystem;
+
+public class PassengerNotFoundException extends Exception {
+
+	public PassengerNotFoundException(String msg) {
+		super(msg);
+	}
+}
+------------------------------------------------------------------------------
+package flightbookingsystem;
+
+import java.util.Scanner;
+
+public class Tester {
+
+	public static void main(String[] args) {
+		int ch=0;
+		Scanner sc = new Scanner(System.in);
+		
+		Flight obj = new BuissnessFlight("F001", "Pune", "Mumbai");
+		System.out.println("Welcome to Flight Management System");
+		
+		do {
+			System.out.println("""
+					---------------+---------------------+-------------------------+-------------------
+					1.ADD
+					2.REMOVE
+					3.DISPLAY
+					4.SEARCH
+					5.CHNAGE SEAT
+					6.EXIT
+					---------------+---------------------+-------------------------+-------------------
+					""");
+		System.out.print("Enter your choice: ");
+		ch =sc.nextInt();
+		switch(ch) {
+		case 1:
+			sc.nextLine();
+			System.out.print("Enter the name: ");
+			String name = sc.nextLine();			
+			System.out.print("Enter seat no: ");
+			int seatNo = sc.nextInt();
+			Passenger p = new Passenger(name, seatNo);
+			obj.addPassengers(p);
+			break;
+			
+		case 2:
+			System.out.println("Enter ID of Customer: ");
+			int id = sc.nextInt();
+			try {
+				obj.removePassengers(id);
+			} catch (PassengerNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+			break;
+			
+		case 3:
+			obj.displayAll();
+			break;
+			
+		case 4:
+			System.out.print("Enter Seat No of Customer: ");
+			int custSeatNo = sc.nextInt();
+			obj.searchPassengerBySeatNo(custSeatNo);
+			break;
+			
+		case 5:
+			System.out.print("Enter Customer ID: ");
+			int custID = sc.nextInt();
+			System.out.print("Enter customer seatNo: ");
+			int custSeatNo1 = sc.nextInt();
+			obj.changeSeatNo(custID, custSeatNo1);
+			break;
+		case 6:
+			System.out.println("Thank You!!");
+			break;
+		default:
+			System.out.println("Enter invalid choice");
+			break;
+		}	
+		}while(ch!=6);
+	}
+}

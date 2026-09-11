@@ -1,0 +1,448 @@
+package hospitalmanagement;
+
+public class Doctor {
+	static int idGenerator=2000;
+	int id;
+	String name;
+	long phonrNumber;
+	boolean isAvaialble;
+	
+	public Doctor(String name, long phonrNumber) {
+		super();
+		this.name = name;
+		this.phonrNumber = phonrNumber;
+		this.isAvaialble = true;
+		this.id = idGenerator++;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public long getPhonrNumber() {
+		return phonrNumber;
+	}
+
+	public void setPhonrNumber(long phonrNumber) {
+		this.phonrNumber = phonrNumber;
+	}
+
+	public boolean isAvaialble() {
+		return isAvaialble;
+	}
+
+	public void setAvaialble(boolean isAvaialble) {
+		this.isAvaialble = isAvaialble;
+	}
+
+	@Override
+	public String toString() {
+		return "Doctor [id=" + id + ", name=" + name + ", phonrNumber=" + phonrNumber + ", isAvaialble=" + isAvaialble
+				+ "]";
+	}
+}
+----------------------------------------------------------------------------------------
+package hospitalmanagement;
+
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Hospital {
+	ArrayList<Patient> patients;
+	ArrayList<Doctor> doctors;
+	ArrayList<Transaction>transcations;
+	Scanner sc = new Scanner(System.in);
+	final String path = "./src/resources/log.txt";
+	
+	public Hospital() {
+		patients = new ArrayList<Patient>();
+		doctors = new ArrayList<Doctor>();
+		transcations = new ArrayList<Transaction>();
+	}
+	
+	public void logTransaction(String msg) {
+		try {
+			FileOutputStream fo = new FileOutputStream(path, true);
+			String msgData = msg + System.lineSeparator();
+			byte[] data = msgData.getBytes();
+			fo.write(data);
+			fo.close();
+			
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void recordTransaction(int doctorID, int patientID) {
+		System.out.println("Appointment with " + doctorID + " booked successfully");
+		String msg = "Appointment with " + doctorID + " booked successfully";
+		logTransaction(msg);
+	}
+	
+	public void recordCancellation(int doctorID, int patientID) {
+		System.out.println("Appointment with " + doctorID + " cancelled successfully");
+		String msg = "Appointment with " + doctorID + " cancelled successfully";
+		logTransaction(msg);
+	}
+	
+	public void addDoctor(Doctor d) {
+		doctors.add(d);
+		System.out.println("Doctor added successfully");
+	}
+	
+	public void removeDoctor(int id) {
+		for(Doctor d : doctors) {
+			if(d.getId() == id) {
+				doctors.remove(d);
+				System.out.println("Doctor removed successfully");
+				return;
+			}
+		}
+		System.out.println("Doctor with given id not found");
+	}
+	
+	public void displayDoctors() {
+		for(Doctor d : doctors) {
+			System.out.println(d);
+		}
+	}
+	public void addPatient(Patient p) {
+		patients.add(p);
+		System.out.println("Patient added successfully");
+	}
+	
+	public void removePatient(int id) {
+		for(Patient p : patients) {
+			patients.remove(p);
+			System.out.println("Patient removed successfully");
+		}
+		System.out.println("Patient with given id not found");
+	}
+
+	public void displayPatient() {
+		for(Patient p : patients) {
+			System.out.println(p);
+		}
+	}
+	
+	public Doctor getDoctorByID(int id) {
+		for(Doctor d : doctors) {
+			if(d.getId() == id) {
+				return d;
+			}
+		}
+		return null;
+	}
+	
+	public Patient getPatientByID(int id) {
+		for(Patient p : patients) {
+			if(p.getId() == id) {
+				return p;
+			}
+		}
+		return null;
+	}
+	
+	public void scheduleAppoitment(int did, int pid) {
+		Doctor d = getDoctorByID(did);
+		Patient p = getPatientByID(pid);
+		if(d == null) {
+	        System.out.println("Doctor with given id not found");
+	        return;
+	    }
+
+	    if(p == null) {
+	        System.out.println("Patient with given id not found");
+	        return;
+	    }
+		if(d.isAvaialble == true) {
+			d.setAvaialble(false);
+			Transaction tx = new Transaction(did, pid);
+			transcations.add(tx);
+			recordTransaction(did, pid);
+		}
+		else {
+			System.out.println("Doctor with given id is not available");
+		}
+	}
+	
+	public void cancelAppoitment(int did, int pid) {
+		Doctor d = getDoctorByID(did);
+		d.setAvaialble(true);
+		for(Transaction tx : transcations) {
+			if(tx.getPatientId() == pid) {
+				transcations.remove(tx);
+				recordCancellation(did, pid);
+			}
+		}
+		System.out.println("Booking with given pid not found");
+	}
+	
+	public void updateDoctor(int id) {
+		for(Doctor d : doctors) {
+			if(d.getId() == id) {
+				System.out.print("Enter the updated mobile number");
+				long mobileNo = sc.nextLong();
+				d.setPhonrNumber(mobileNo);
+				System.out.println("record updated successfully");
+				return;
+			}
+		}
+		System.out.println("Doctor with given id not found");
+	}
+	
+	public void updatePatient(int id) {
+		for(Patient p : patients) {
+			if(p.getId() == id) {
+				System.out.print("Enter mobile no: ");
+				long no =- sc.nextLong();
+				p.setContactNumber(no);
+				System.out.println("Record updated successfully");
+				return;
+			}
+		}
+		System.out.println("Patient not found");
+	}
+	
+	public void displayAppointment() {
+		for(Transaction tx : transcations) {
+			System.out.println(tx);
+		}
+	}
+	
+	public void searchDoctorId(int id) {
+		for(Doctor d : doctors) {
+			if(d.getId() == id) {
+				System.out.println(d);
+				return;
+			}
+		}
+		System.out.println("Doctor with given id is not found");
+	}
+}
+--------------------------------------------------------------------------------------
+package hospitalmanagement;
+
+public class Patient {
+	static int idGenerator = 1000;
+	int id;
+	String name;
+	long contactNumber;
+	
+	public Patient(String name, long contactNumber) {
+		super();
+		this.name = name;
+		this.contactNumber = contactNumber;
+		this.id = idGenerator++;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public long getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(long contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", name=" + name + ", contactNumber=" + contactNumber + "]";
+	}
+}
+----------------------------------------------------------------------------------------------------
+package hospitalmanagement;
+
+import java.util.Scanner;
+
+public class Tester {
+	public static void main(String[] args) {
+	int ch = 0;
+	Scanner sc = new Scanner(System.in);
+	Hospital obj = new Hospital();
+	
+	System.out.println("Welcome to AIIMS Hospital Management");
+	do {
+		System.out.println("""
+				---------------------+--------------------+------------------+---------------------
+				1.ADD DR.
+				2,ADD PATIENT
+				3.REMOVE DR
+				4.REMOVE PATIENT
+				5.DISPLAY PATIENT
+				6.DISPLAY DR
+				7.SCHEDULE APPOINTMENT
+				8.CANCEL APPOINTMENT
+				9.DISPLAY APPOINTMENT
+				10.SEARCH DOCTOR BY ID
+				11.EXIT
+				---------------------+--------------------+------------------+---------------------
+				
+				""");
+		
+		System.out.print("Enter your choice: ");
+		ch = sc.nextInt();
+		switch (ch) {
+		case 1 :
+			sc.nextLine();
+			System.out.print("Enter name & no of Dr. ");
+			String dname = sc.nextLine();
+			long no = sc.nextLong();
+			Doctor d = new Doctor(dname, no);
+			obj.addDoctor(d);
+			break;
+		case 2 : 
+			sc.nextLine();
+			System.out.print("Enter name of patient: ");
+			String pname = sc.nextLine();
+
+		    System.out.print("Enter patient mobile no: ");
+		    long pno = sc.nextLong();
+
+			Patient p = new Patient(pname, pno);
+			obj.addPatient(p);
+			break;
+		case 3 : 
+			System.out.print("Enter id of Doctor");
+			int id = sc.nextInt();
+			obj.removeDoctor(id);
+			break;
+		case 4 : 
+			System.out.print("Enter id of Patient");
+			int pid = sc.nextInt();
+			obj.removePatient(pid);
+			break;
+		case 5 : 
+			obj.displayPatient();
+			break;
+		case 6 : 
+			obj.displayDoctors();
+			break;
+		case 7 : 
+			System.out.print("Enter Dr & Patient ID: ");
+			int did = sc.nextInt();
+			int pID = sc.nextInt();
+			obj.scheduleAppoitment(did, pID);
+			break;
+		case 8 : 
+			System.out.print("Enter Doctor & Patient ID: ");
+			int DrID = sc.nextInt();
+			int PaID = sc.nextInt();
+			obj.cancelAppoitment(DrID, PaID);
+			break;
+		case 9 :
+			obj.displayAppointment();
+			break;
+		case 10 : 
+			System.out.print("Enter ID of Doctor");
+			int DoctorID = sc.nextInt();
+			obj.searchDoctorId(DoctorID);
+			break;
+		case 11 : 
+			System.out.println("BE HEALTHY! STAY HEALTHY!!");
+			break;
+		default:
+			System.out.println("Invalid choice..");
+			break;
+			}
+		}while(ch!=11);
+	}
+}
+----------------------------------------------------------------------------------------------
+package hospitalmanagement;
+
+import java.time.LocalDateTime;
+
+public class Transaction {
+	static int idGenerator=3000;
+	int id;
+	int doctorId;
+	int patientId;
+	String status;
+	LocalDateTime time;
+	
+	public Transaction(int doctorId, int patientId) {
+		super();
+		this.doctorId = doctorId;
+		this.patientId = patientId;
+		this.id = idGenerator++;
+		this.status = "BOOK";
+		this.time = LocalDateTime.now();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getDoctorId() {
+		return doctorId;
+	}
+
+	public void setDoctorId(int doctorId) {
+		this.doctorId = doctorId;
+	}
+
+	public int getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(int patientId) {
+		this.patientId = patientId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public LocalDateTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalDateTime time) {
+		this.time = time;
+	}
+
+	@Override
+	public String toString() {
+		return "Transaction [id=" + id + ", doctorId=" + doctorId + ", patientId=" + patientId + ", status=" + status
+				+ ", time=" + time + "]";
+	}
+}

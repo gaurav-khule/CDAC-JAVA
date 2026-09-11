@@ -1,0 +1,401 @@
+package ridesystem;
+
+import java.util.ArrayList;
+
+public class Customer {
+	static int idGenerator = 3000;
+	int Custid;
+	String name;
+	ArrayList<Ride> rides;
+	
+	public Customer(String name) {
+		super();
+		this.Custid = idGenerator++;
+		this.name = name;
+		this.rides = new ArrayList<Ride>();
+	}
+	
+	public void bookRide(Ride r) {
+		rides.add(r);
+		System.out.println("Ride Book Successfully");
+	}
+	
+	public void removeRide(int rideId) {
+		for(Ride r : rides) {
+			if(r.getRideId() == rideId) {
+				r.setStatus("CANCEL");
+				r.setFare(0);
+				System.out.println("Ride Cancel Successfully");
+				return;
+			}
+		}
+		System.out.println("Ride with given ID not found");
+	}
+	
+	public void displayRide() {
+		for(Ride r : rides) {
+			System.out.println(r);
+		}
+	}
+	
+	public void calculateBill() {
+		int total = 0;
+		for(Ride r : rides) {
+			total = total + r.getFare();
+		}
+		System.out.println("Total Fare: " + total);
+	}
+	
+	
+	public int getCustid() {
+		return Custid;
+	}
+
+	public void setCustid(int custid) {
+		Custid = custid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public ArrayList<Ride> getRides() {
+		return rides;
+	}
+
+	public void setRides(ArrayList<Ride> rides) {
+		this.rides = rides;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [Custid=" + Custid + ", name=" + name + ", rides=" + rides + "]";
+	}
+}
+--------------------------------------------------------------------------------------------------------------------
+package ridesystem;
+
+import java.util.ArrayList;
+
+public class Driver {
+	static int idGenerator = 2000; 
+	int driverID;
+	String name;
+	ArrayList<Ride> rides;
+	
+	public Driver(String name) {
+		super();
+		this.name = name;
+		this.driverID = idGenerator++;
+		this.rides = new ArrayList<Ride>();
+	}
+	
+	public void assignRide(Ride r) {
+		rides.add(r);
+		System.out.println("Ride Assigned Successfully to "+ this.name);
+	}
+	
+	public int getDriverID() {
+		return driverID;
+	}
+
+	public void setDriverID(int driverID) {
+		this.driverID = driverID;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public ArrayList<Ride> getRides() {
+		return rides;
+	}
+
+	public void setRides(ArrayList<Ride> rides) {
+		this.rides = rides;
+	}
+
+	@Override
+	public String toString() {
+		return "Driver [driverID=" + driverID + ", name=" + name + ", rides=" + rides + "]";
+	}
+}
+------------------------------------------------------------------------------------------------------------
+package ridesystem;
+
+public class Ride {
+	static int idGenerator = 1000;
+	int rideId;
+	String source;
+	String destination;
+	int fare;
+	String status;
+	
+	//Define para constructor
+	public Ride(String source, String destination, int fare) {
+		this.source = source;
+		this.destination = destination;
+		this.fare = fare;
+		this.rideId = idGenerator++;
+		this.status = "BOOK";
+	}
+	
+	//respective getter setter
+	public int getRideId() {
+		return rideId;
+	}
+
+	public void setRideId(int rideId) {
+		this.rideId = rideId;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	public int getFare() {
+		return fare;
+	}
+
+	public void setFare(int fare) {
+		this.fare = fare;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	//For ride data
+	@Override
+	public String toString() {
+		return "Ride [rideId=" + rideId + ", source=" + source + ", destination=" + destination + ", fare=" + fare
+				+ ", status=" + status + "]";
+	}
+}
+-------------------------------------------------------------------------------------------------------------------------------
+package ridesystem;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class RideAdmin {
+	
+	ArrayList<Ride> rides;
+	ArrayList<Customer> customers;
+	ArrayList<Driver> drivers;
+	Scanner sc = new Scanner(System.in);
+	
+	public RideAdmin() {
+		this.rides = new ArrayList<Ride>();
+		this.customers = new ArrayList<Customer>();
+		this.drivers = new ArrayList<Driver>();
+	}
+	
+	public void addCustomer() {
+		System.out.print("Enter the name of Customer: ");
+		String cname = sc.nextLine();
+		Customer c = new Customer(cname);
+		customers.add(c);
+		System.out.println("Customer added successfully...");
+		System.out.println("Customer Id: " + c.Custid);
+	}
+	
+	public void addDriver() {
+		System.out.print("Enter Driver name: ");
+		String dname = sc.nextLine();
+		Driver d = new Driver(dname);
+		drivers.add(d);
+		System.out.println("Driver added successfully..");
+		System.out.println("Driver ID: " + d.driverID);
+	}
+	
+	
+	public Customer getCustomerById(int id) {
+		for(Customer c : customers) {
+			if(c.getCustid() == id) {
+				return c;
+			}
+		}
+		return null;
+	}
+	
+	public Driver getDriverById(int id) {
+		for(Driver d : drivers) {
+			if(d.getDriverID() == id) {
+				return d;
+			}
+		}
+		return null;
+	}
+	
+	public Ride getRideByID(int id) {
+		for(Ride r : rides) {
+			if(r.getRideId() == id) {
+				return r;
+			}
+		}
+		return null;
+	}
+	
+	public void bookRide(int cid, int did, String src, String dest, int fare) {
+		
+		Customer c = getCustomerById(cid);
+		Driver d = getDriverById(did);
+		  if(c == null) {
+		        System.out.println("Customer not found");
+		        return;
+		    }
+
+		    if(d == null) {
+		        System.out.println("Driver not found");
+		        return;
+		    }
+		    
+		Ride r = new Ride(src, dest, fare);
+		c.bookRide(r);
+		d.assignRide(r);
+		rides.add(r);
+		System.out.println("Ride booked successfully");
+	}
+	
+	public void cancelRide(int cid, int rid) {
+		Ride r = getRideByID(rid);
+		Customer c = getCustomerById(cid);
+		c.removeRide(rid);
+		rides.remove(r);
+		System.out.println("Ride cancel successfully");
+	}
+	
+	public void displayRides() {
+		for(Ride r : rides) {
+			System.out.println(r);
+		}
+	}
+	
+	public void displayCustomers() {
+		for(Customer c : customers) {
+			System.out.println(c);
+		}
+	}
+	
+	public void displayDriver() {
+		for(Driver d : drivers) {
+			System.out.println(d);
+		}
+	}
+}
+------------------------------------------------------------------------------------------------------------------
+package ridesystem;
+
+import java.util.Scanner;
+
+public class Tester {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int ch=0;
+		RideAdmin obj = new RideAdmin();
+		System.out.println("Welcome to Ride Sharing System");
+		do {
+			System.out.println("""
+					---------+----------+---------+-------------+----------+---------------
+					1.Add Customer
+					2.Add Driver
+					3.Book Ride
+					4.Cancel
+					5.Display Customer
+					6.Display Driver
+					7.Display Ride
+					8.Calculate bill
+					9.Exit
+					---------+----------+---------+-------------+----------+---------------
+					""");
+			System.out.print("Enter your choice: ");
+			ch = sc.nextInt();
+			
+			switch(ch) {
+			case 1 :
+				obj.addCustomer();
+				break;
+			case 2:
+				obj.addDriver();
+				break;
+			case 3:
+				System.out.print("Enter customer id: ");
+				int cid = sc.nextInt();
+				System.out.print("Enter driver id: ");
+				int did = sc.nextInt();
+				
+				sc.nextLine();
+				
+				System.out.print("Enter src: ");
+				String src = sc.nextLine();
+				System.out.print("Enter dest: ");
+				String dest = sc.nextLine();
+				System.out.print("Enter fare: ");
+				int fare = sc.nextInt();
+				obj.bookRide(cid, did, src, dest, fare);
+				break;
+			case 4:
+				System.out.print("Enter Customer ID: ");
+				int custId = sc.nextInt();
+				System.out.print("Enter Ride ID: ");
+				int rideId = sc.nextInt();
+				obj.cancelRide(custId, rideId);
+				break;
+			case 5:
+				obj.displayCustomers();
+				break;
+			case 6:
+				obj.displayDriver();
+				break;
+			case 7:
+				obj.displayRides();
+				break;
+			case 8:
+				boolean found = false;
+				System.out.print("Enter id of Customer: ");
+				int cid1 = sc.nextInt();
+				for(Customer c : obj.customers) {
+					if(c.getCustid() == cid1) {
+						c.calculateBill();
+						found = true;
+						break;
+					}
+				}if(found != false) {
+					System.out.println("Cutomer for given Id not found");
+				}
+				break;
+			case 9:
+				System.out.println("Thank you !!");
+				break;
+			default:
+				System.out.println("Enter valid choice..");
+				break;
+			}
+		}while(ch!=9);
+	}
+}

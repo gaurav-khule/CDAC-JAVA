@@ -1,0 +1,285 @@
+package employeemanagement;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class CompanyHR {
+	ArrayList<Department>departments;
+	Scanner sc = new Scanner(System.in);
+	
+	public CompanyHR() {
+		departments = new ArrayList<Department>();
+	}
+	
+	public void addDepartment() {
+		System.out.print("Enter Department Name: ");
+		String dname = sc.next();
+		Department d = new Department(dname);
+		departments.add(d);
+		System.out.println("Department added successfully");
+	}
+	
+	public void displayDept() {
+		for(Department d : departments) {
+			System.out.println(d);
+		}
+	}
+	
+	public void addEmptoDept() {
+		System.out.println("Enter the name of Department: ");
+		String dname = sc.next();
+		for(Department d : departments) {
+			if(d.getDeptName().equals(dname)) {
+				System.out.print("1.Employee: 2.Manager");
+				int ch = sc.nextInt();
+				System.out.print("Enter name & salary of Emp: ");
+				String name = sc.next();
+				double sal = sc.nextDouble();
+				if(ch == 2) {
+					System.out.print("Enter DeptName: ");
+					String deptName = sc.next();
+					Employee e = new Manager(name, sal, deptName);
+					d.addEmployee(e);
+					System.out.println("Manager added successfully");
+					return;
+				}else {
+					Employee e1 = new Employee(name, sal);
+					d.addEmployee(e1);
+					System.out.println("Employee added successfully");
+				}
+				return;
+			}
+		}
+		System.out.println("Employee with given name not found");
+	}
+	
+	public void removeEmployeeFromDept() {
+		System.out.print("Enter DeptName: ");
+		String dname = sc.next();
+		for(Department d : departments) {
+			if(d.getDeptName().equalsIgnoreCase(dname)) {
+				System.out.print("Enter Id of Employee: ");
+				int id = sc.nextInt();
+				d.removeEmployee(id);
+				return;
+			}
+		}
+		System.err.println("Department with this id is not found");
+	}
+	
+	public void displayDeptEmp() {
+		System.out.print("Employee Deptname: " );
+		String dnmae = sc.next();
+		for(Department d : departments) {
+			if(d.getDeptName().equalsIgnoreCase(dnmae)) {
+				d.displayAll();
+			}
+		}
+	}
+	
+	public void applyRaiseToAll() {
+		System.out.print("Enter the hike percentage: ");
+		Employee.raisePercentage = sc.nextDouble();
+		for(Department d : departments) {
+			for(Employee e: d.employees) {
+				e.applyRaise();
+			}
+		}
+	}
+	
+	public void displayEmployeeCount() {
+		System.out.println("Total Employee: " + Employee.empCount);
+	}
+}
+-----------------------------------------------------------------------------------------------
+package employeemanagement;
+
+import java.util.ArrayList;
+
+public class Department {
+	String deptName;
+	ArrayList<Employee> employees;
+	
+	public Department(String deptName) {
+		super();
+		this.deptName = deptName;
+		this.employees = new ArrayList<Employee>();
+	}
+	
+	public String getDeptName() {
+		return deptName;
+	}
+	
+	public void addEmployee(Employee e) {
+		employees.add(e);
+		System.out.println("Employee added successfully..");
+	}
+	
+	public void removeEmployee(int id) {
+		for(Employee e : employees) {
+			if(e.getId() == id) {
+				employees.remove(e);
+				Employee.empCount--;
+				System.out.println("Employee removed successfully");
+				return;
+			}
+		}
+		System.out.println("Employee with given ID is Not Found");
+	}
+	
+	public void displayAll() {
+		for(Employee e : employees) {
+			System.out.println(e);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Department [deptName=" + deptName + ", employees=" + employees + "]";
+	}
+}
+
+---------------------------------------------------------------------------------------------------
+package employeemanagement;
+
+public class Employee {
+	static int idGenerator = 1;
+	int id;
+	String name;
+	double salary;
+	static int empCount = 0;
+	static double raisePercentage;
+	
+	
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public double getSalary() {
+		return salary;
+	}
+
+	public void setSalary(double salary) {
+		this.salary = salary;
+	}
+
+	public Employee(String name, double salary) {
+		this.name = name;
+		this.salary = salary;
+		this.id = idGenerator++;
+		empCount++;
+	}
+	
+	public void displayEmployee() {
+		System.out.println("Employee ID: " + id);
+		System.out.println("Name: " + this.name);
+		System.out.println("Salary: " + this.salary);
+	}
+	
+	public static void displayTotalEmployee() {
+		System.out.println("Total Number of Employee: "+empCount);
+	}
+	
+	public void setRaise(int amt) {
+		raisePercentage = amt;
+	}
+	
+	public void applyRaise() {
+		double hike = salary * raisePercentage/100;
+		salary = salary + hike;
+	}
+
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", name=" + name + ", salary=" + salary + "]";
+	}
+}
+
+-----------------------------------------------------------------------------------------------------------------
+package employeemanagement;
+
+public class Manager extends Employee {
+	String deptName;
+
+	public Manager(String name, double salary, String deptName) {
+		super(name, salary);
+		this.deptName = deptName;
+	}
+	
+	@Override
+	public void displayEmployee() {
+		System.out.println("Employee ID: " + id);
+		System.out.println("Name: " + this.name);
+		System.out.println("Salary: " + this.salary);
+		System.out.println("Department Name: " + this.deptName);
+	}
+	
+	
+	
+}
+package employeemanagement;
+
+import java.util.Scanner;
+
+public class Tester {
+	public static void main(String[] args) {
+		int ch = 0;
+		Scanner sc = new Scanner(System.in); 
+		CompanyHR obj = new CompanyHR();
+		System.out.println("Welcome to LaLa Employee Management System");
+		do {
+			System.out.println("""
+					--------------------+--------------+_----------+-------------------------
+					1.Add DEPT
+					2.ADD EMP
+					3.REMOVE EMP
+					4.DISPLAY EMPLOYEE
+					5.APPLY RAISE
+					6.DISPLAY DEPARTMENT
+					7.EXIT
+					--------------------+--------------+_----------+-------------------------
+					""");
+			System.out.print("Enter your choice: ");
+			ch = sc.nextInt();
+			switch(ch) {
+			case 1:
+				obj.addDepartment();
+				break;
+			case 2:
+				obj.addEmptoDept();
+				break;
+			case 3:
+				obj.removeEmployeeFromDept();
+				break;
+			case 4:
+				obj.displayDeptEmp();
+				break;
+			case 5:
+				obj.applyRaiseToAll();
+				break;
+			case 6:
+				obj.displayDept();
+				break;
+			case 7:
+				System.out.println("Thank you from LA..LA Company");
+				break;
+			default:
+				System.out.println("Invalid choice");
+				break;
+			}
+		}while(ch!=7);
+	}
+}
